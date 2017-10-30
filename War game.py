@@ -95,6 +95,24 @@ class Hand(object):
             self.comp.append(deck.cards[-1]) #adds last card in list cards to list comp
             deck.cards.pop()
 
+class score(object): #Used to score the hand and store curent scores
+    def __init__(self):
+        self.pScore = 0
+        self.cScore = 0
+
+    def score(pCard, cCard): #accepts filename of player and computer cards
+        pVal = int(pCard[0]) #takes the number from start of card name (suit doesnt matter)
+        cVal = int(cCard[0])
+        if pVal > cVal and cVal != 1: #checks for player win
+            self.pScore++
+        else if cVal > pVal and pVal != 1: #checks for computer win
+            self.cScore++
+        else if pVal == 1: #checks for player win by an ace
+            self.pScore++
+        else if cVal == 1:
+            self.cScore++
+        else if cVal == pVal:
+            #need to call a WAR! class here
 
 
 
