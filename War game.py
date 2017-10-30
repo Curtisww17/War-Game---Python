@@ -1,4 +1,4 @@
-#   Wesley Curtis            _
+#   Wesley Curtis              _
  #   Adam Cramer            _ooOoo_
   #                        o8888888o
    #                       88" . "88
@@ -17,10 +17,10 @@
   #           \  \ `-.   \_\_`. _.'_/_/  -' _.' /
  #  ===========`-.`___`-.__\ \___  /__.-'_.'_.-'================
 #                           `=--=-'
-
+#                  Buddah Bless The Code
 import pygame, sys, random
 from pygame.locals import *
-
+#Note card image files are labeled by value from 1 to 13 and first letter of suit (jack of clubs is 11c)
 
 
 def init():
@@ -44,7 +44,7 @@ def display():
     window.blit(textBox,textRect)
     window.blit(hand.player[-1].img(), (126,200))
     window.blit(hand.comp[-1].img(), (526,200))
-    
+
 
 
 #This class creates a card object, each with a value and suit.
@@ -58,12 +58,12 @@ class Card(object):
         self.face = pygame.image.load("{}".format(self.cardname))
         self.face = pygame.transform.scale(self.face, (148,200))
 
-    def img(self):
-        
+    def img(self): #retuns image of card
+
         return self.face
-        
-        
-    
+
+
+
 #The deck class creates a list of cards, which creates 52 cards (in construct())
 #
 class Deck(object):
@@ -77,34 +77,34 @@ class Deck(object):
                 newcard = Card(value, suit)
                 self.cards.append(newcard)
 
-    def cut(self):
+    def cut(self): #Totally unnessesary but here anyways (would split deck into 2 hands)
         Hand.player = self.cards[:len(self.cards)/2]
         Hand.comp = self.cards[len(self.cards)/2:]
 
 
 class Hand(object):
     def __init__(self):
-        self.player = []
+        self.player = [] # CHANGE THESE TO VARS
         self.comp = []
 
     def draw(self, var):
         if var == "player":
-            self.player.append(deck.cards[-1])
-            deck.cards.pop()
+            self.player.append(deck.cards[-1]) #adds last card in list cards to list player
+            deck.cards.pop()#Removes last card in list
         if var == "comp":
-            self.comp.append(deck.cards[-1])
+            self.comp.append(deck.cards[-1]) #adds last card in list cards to list comp
             deck.cards.pop()
 
 
 
-        
-init()
+
+init() #starts E V E R Y T H I N G
 
 
 while True:
     if len(hand.player) > 0 and len(hand.comp) > 0:
         display()
-        
+
     if len(hand.player) < 26:
         window.blit(textBox,textRect)
         window.blit(back,(126,400))
@@ -112,11 +112,11 @@ while True:
     else:
         display()
     for event in pygame.event.get():
-        
+
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-        if event.type == MOUSEBUTTONUP:
+        if event.type == MOUSEBUTTONUP: #run next turn
             hand.draw('comp')
             hand.draw('player')
             #mousex,mousey = event.pos
