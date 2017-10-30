@@ -104,13 +104,13 @@ class score(object): #Used to score the hand and store curent scores
         pVal = int(pCard[0]) #takes the number from start of card name (suit doesnt matter)
         cVal = int(cCard[0])
         if pVal > cVal and cVal != 1: #checks for player win
-            self.pScore++
+            self.pScore += 1
         else if cVal > pVal and pVal != 1: #checks for computer win
-            self.cScore++
+            self.cScore += 1
         else if pVal == 1: #checks for player win by an ace
-            self.pScore++
+            self.pScore += 1
         else if cVal == 1:
-            self.cScore++
+            self.cScore += 1
         else if cVal == pVal:
             #need to call a WAR! class here
 
