@@ -24,7 +24,7 @@ from pygame.locals import *
 
 
 def init():
-    global textBox, textRect, hand, deck, window, font, back
+    global textBox, textRect, hand, deck, window, font, back, score, counter, counter2
     pygame.init()
     window = pygame.display.set_mode((800,600))
     pygame.display.set_caption('War!')
@@ -38,12 +38,17 @@ def init():
     textBox = font.render('WAR!',True, (255,255,255))
     textRect = textBox.get_rect()
     textRect.center = (400,100)
+    score = score()
+    counter = 0
+    counter2 = 0
 
+    
 def display():
     window.fill((0,160,0))
     window.blit(textBox,textRect)
-    window.blit(hand.player[-1].img(), (126,200))
-    window.blit(hand.comp[-1].img(), (526,200))
+    if hand.player != None and hand.comp != None:
+        window.blit(hand.player.img(), (126,200))
+        window.blit(hand.comp.img(), (526,200))
 
 
 
@@ -84,15 +89,15 @@ class Deck(object):
 
 class Hand(object):
     def __init__(self):
-        self.player = [] # CHANGE THESE TO VARS
-        self.comp = []
+        self.player = None # CHANGE THESE TO VARS
+        self.comp = None
 
     def draw(self, var):
         if var == "player":
-            self.player.append(deck.cards[-1]) #adds last card in list cards to list player
+            self.player = deck.cards[-1] #adds last card in list cards to list player
             deck.cards.pop()#Removes last card in list
         if var == "comp":
-            self.comp.append(deck.cards[-1]) #adds last card in list cards to list comp
+            self.comp = deck.cards[-1] #adds last card in list cards to list comp
             deck.cards.pop()
 
 class score(object): #Used to score the hand and store curent scores
@@ -100,42 +105,49 @@ class score(object): #Used to score the hand and store curent scores
         self.pScore = 0
         self.cScore = 0
 
-    def score(pCard, cCard): #accepts filename of player and computer cards
-        pVal = int(pCard[0]) #takes the number from start of card name (suit doesnt matter)
-        cVal = int(cCard[0])
-        if pVal > cVal and cVal != 1: #checks for player win
-            self.pScore += 1
-        else if cVal > pVal and pVal != 1: #checks for computer win
-            self.cScore += 1
-        else if pVal == 1: #checks for player win by an ace
-            self.pScore += 1
-        else if cVal == 1:
-            self.cScore += 1
-        else if cVal == pVal:
-            #need to call a WAR! class here
+    def score(self, pCard, cCard): #accepts filename of player and computer cards
+        if hand.player != None and hand.comp != None:
+            if hand.player.value > hand.comp.value and hand.comp.value != 1: #checks for player win
+                self.pScore += 1
+            elif hand.comp.value > hand.player.value and hand.player.value != 1: #checks for computer win
+                self.cScore += 1
+            elif hand.player.value == 1: #checks for player win by an ace
+                self.pScore += 1
+            elif hand.comp.value == 1:
+                self.cScore += 1
+            elif hand.comp.value == hand.player.value:
+                war()
+                #need to call a WAR! class here
+
+
+def end():
+    pass
+
+def war():
+    pass
 
 
 
-init() #starts E V E R Y T H I N G
-
-
+init()#starts EVERYTHING
 while True:
-    if len(hand.player) > 0 and len(hand.comp) > 0:
-        display()
-
-    if len(hand.player) < 26:
-        window.blit(textBox,textRect)
-        window.blit(back,(126,400))
-        window.blit(back,(526,400))
-    else:
-        display()
+    
+    display()
+    if counter == counter2:
+        score.score(hand.player,hand.comp)
+        print(score.pScore, score.cScore)
     for event in pygame.event.get():
 
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
         if event.type == MOUSEBUTTONUP: #run next turn
-            hand.draw('comp')
-            hand.draw('player')
-            #mousex,mousey = event.pos
+            if len(deck.cards) > 0:
+                hand.draw('comp')
+                hand.draw('player')
+                counter += 1
+                counter2 = 0
+            else:
+                end()
     pygame.display.update()
+    counter2 += 1
+    
