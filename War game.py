@@ -18,13 +18,13 @@
  #  ===========`-.`___`-.__\ \___  /__.-'_.'_.-'================
 #                           `=--=-'
 #                  Buddah Bless The Code
-import pygame, sys, random
+import pygame, sys, random, time
 from pygame.locals import *
 #Note card image files are labeled by value from 1 to 13 and first letter of suit (jack of clubs is 11c)
 
 
 def init():
-    global textBox, textRect, hand, deck, window, font, back, score, counter, counter2
+    global textBox, textRect, hand, deck, window, font, back, score, counter, counter2, activew
     pygame.init()
     window = pygame.display.set_mode((800,900))
     pygame.display.set_caption('War!')
@@ -41,14 +41,16 @@ def init():
     score = score()
     counter = 0
     counter2 = 0
+    activew = False
 
 
 def display():
-    window.fill((0,160,0))
-    window.blit(textBox,textRect)
-    if hand.player != None and hand.comp != None:
-        window.blit(hand.player.img(), (126,200))
-        window.blit(hand.comp.img(), (526,200))
+    if activew == False: #Keeps from screwing up the War! setup
+        window.fill((0,160,0))
+        window.blit(textBox,textRect)
+        if hand.player != None and hand.comp != None:
+            window.blit(hand.player.img(), (126,200))
+            window.blit(hand.comp.img(), (526,200))
 
 
 
@@ -122,6 +124,7 @@ def end():
     pass
 
 def war():
+    activew = True
     back = pygame.image.load("{}".format("back.png"))
     back = pygame.transform.scale(back, (148,200))#Sets back to the image of a card back
 
@@ -134,7 +137,7 @@ def war():
         window.blit(back, (526,350))
 
         c = 0 #used as counter var for while loop
-        while c < 7: #removes the 6 discarded cards from the deck
+        while c < 6: #removes the 6 discarded cards from the deck
             deck.cards.pop()#Removes last card in list
             c += 1
 
@@ -146,8 +149,8 @@ def war():
 
         score.score(hand.player,hand.comp)#Scores WAR!
 
-    pygame.display.update()
-
+        pygame.display.update()
+        time.sleep(2) #DEBUG REMOVE FROM FINAL BUILD
 
 
 init()#starts EVERYTHING
@@ -163,7 +166,9 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == MOUSEBUTTONUP: #run next turn
-            if len(deck.cards) > 0:
+            if activew == True:
+                activew = False
+            if len(deck.cards) > 1:
                 hand.draw('comp')
                 hand.draw('player')
                 counter += 1
