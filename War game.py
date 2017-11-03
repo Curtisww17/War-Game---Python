@@ -6,7 +6,7 @@
      #                     O\  =  /O
       #                 ____/`---'\____
        #              .'  \\|     |//  `.
-        #            /  \\|||  :  |||//  \ 
+        #            /  \\|||  :  |||//  \
          #          /  _||||| -:- |||||_  \
         #           |   | \\\  -  /'| |   |
        #            | \_|  `\`---'//  |_/ |
@@ -26,7 +26,7 @@ from pygame.locals import *
 def init():
     global textBox, textRect, hand, deck, window, font, back, score, counter, counter2
     pygame.init()
-    window = pygame.display.set_mode((800,600))
+    window = pygame.display.set_mode((800,900))
     pygame.display.set_caption('War!')
     font = pygame.font.SysFont('broadway', 38, True)
     back = pygame.image.load("back.png")
@@ -42,7 +42,7 @@ def init():
     counter = 0
     counter2 = 0
 
-    
+
 def display():
     window.fill((0,160,0))
     window.blit(textBox,textRect)
@@ -64,9 +64,7 @@ class Card(object):
         self.face = pygame.transform.scale(self.face, (148,200))
 
     def img(self): #retuns image of card
-
         return self.face
-
 
 
 #The deck class creates a list of cards, which creates 52 cards (in construct())
@@ -124,17 +122,41 @@ def end():
     pass
 
 def war():
-    pass
+    back = pygame.image.load("{}".format("back.png"))
+    back = pygame.transform.scale(back, (148,200))#Sets back to the image of a card back
+
+    if len(deck.cards) >= 8: #makes sure there are enough cards for War!
+        window.blit(back, (126,250))#Displays the card backs
+        window.blit(back, (526,250))
+        window.blit(back, (126,300))#Row 2
+        window.blit(back, (526,300))
+        window.blit(back, (126,350))#Row 3
+        window.blit(back, (526,350))
+
+        c = 0 #used as counter var for while loop
+        while c < 7: #removes the 6 discarded cards from the deck
+            deck.cards.pop()#Removes last card in list
+            c += 1
+
+        hand.draw('comp') #draws the 2 cards for WAR!
+        hand.draw('player')
+
+        window.blit(hand.player.img(), (126,400)) #displays the 2 final cards for WAR!
+        window.blit(hand.comp.img(), (526,400))
+
+        score.score(hand.player,hand.comp)#Scores WAR!
+
+    pygame.display.update()
 
 
 
 init()#starts EVERYTHING
 while True:
-    
+
     display()
     if counter == counter2:
         score.score(hand.player,hand.comp)
-        print(score.pScore, score.cScore)
+        print(score.pScore, score.cScore) #debug for score() class
     for event in pygame.event.get():
 
         if event.type == QUIT:
@@ -150,4 +172,3 @@ while True:
                 end()
     pygame.display.update()
     counter2 += 1
-    
