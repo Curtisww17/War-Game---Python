@@ -18,15 +18,15 @@
  #  ===========`-.`___`-.__\ \___  /__.-'_.'_.-'================
 #                           `=--=-'
 #                  Buddah Bless The Code
-import pygame, sys, random
+import pygame, sys, random, time, math
 from pygame.locals import *
 #Note card image files are labeled by value from 1 to 13 and first letter of suit (jack of clubs is 11c)
 
 
 def init():
-    global textBox, textRect, hand, deck, window, font, back, score, counter, counter2
+    global textBox, textRect, hand, deck, window, font, back, score, counter, counter2, warchecker
     pygame.init()
-    window = pygame.display.set_mode((800,900))
+    window = pygame.display.set_mode((800,600))
     pygame.display.set_caption('War!')
     font = pygame.font.SysFont('broadway', 38, True)
     back = pygame.image.load("back.png")
@@ -41,6 +41,7 @@ def init():
     score = score()
     counter = 0
     counter2 = 0
+    warchecker = False
 
 
 def display():
@@ -103,72 +104,76 @@ class score(object): #Used to score the hand and store curent scores
         self.pScore = 0
         self.cScore = 0
 
-    def score(self, pCard, cCard): #accepts filename of player and computer cards
+    def score(self, pCard, cCard, inc): #accepts the player's and computer's cards as well a the amount
+                                        #of points it is scoring for, to account for a war
         if hand.player != None and hand.comp != None:
             if hand.player.value > hand.comp.value and hand.comp.value != 1: #checks for player win
-                self.pScore += 1
+                self.pScore += inc
             elif hand.comp.value > hand.player.value and hand.player.value != 1: #checks for computer win
-                self.cScore += 1
-            elif hand.player.value == 1: #checks for player win by an ace
-                self.pScore += 1
-            elif hand.comp.value == 1:
-                self.cScore += 1
+                self.cScore += inc
+            elif hand.player.value == 1 and hand.comp.value != 1: #checks for player win by an ace
+                self.pScore += inc
+            elif hand.comp.value == 1 and hand.player.value != 1:
+                self.cScore += inc
             elif hand.comp.value == hand.player.value:
-                war()
-                #need to call a WAR! class here
+                if len(deck.cards) > 0:
+                    war()
 
 
 def end():
     pass
 
 def war():
-    back = pygame.image.load("{}".format("back.png"))
-    back = pygame.transform.scale(back, (148,200))#Sets back to the image of a card back
+    warchecker = True
+    if len(deck.cards) >= 8:
+        upper = 7
+    else:
+        upper = len(deck.cards)-1
+        
+    for i in range(1, math.ceil(upper/2)):
+        deck.cards.pop(-i)
+        deck.cards.pop(-(i+1))
+        
+        window.blit(back, (126, 250 + (50* i)))
+        window.blit(back, (526, 250 + (50* i)))
+        time.sleep(.5)
+        pygame.display.update()
 
-    if len(deck.cards) >= 8: #makes sure there are enough cards for War!
-        window.blit(back, (126,250))#Displays the card backs
-        window.blit(back, (526,250))
-        window.blit(back, (126,300))#Row 2
-        window.blit(back, (526,300))
-        window.blit(back, (126,350))#Row 3
-        window.blit(back, (526,350))
-
-        c = 0 #used as counter var for while loop
-        while c < 7: #removes the 6 discarded cards from the deck
-            deck.cards.pop()#Removes last card in list
-            c += 1
-
-        hand.draw('comp') #draws the 2 cards for WAR!
-        hand.draw('player')
-
-        window.blit(hand.player.img(), (126,400)) #displays the 2 final cards for WAR!
-        window.blit(hand.comp.img(), (526,400))
-
-        score.score(hand.player,hand.comp)#Scores WAR!
-
+    hand.draw('comp')
+    hand.draw('player')
+    window.blit(hand.player.img(), (126,300 + (50* i)))
+    window.blit(hand.comp.img(), (526,300 + (50 * i)))
+    time.sleep(.5)
     pygame.display.update()
-
+    score.score(hand.player,hand.comp,6)
+    time.sleep(1)
+    
+    
 
 
 init()#starts EVERYTHING
 while True:
-
-    display()
-    if counter == counter2:
-        score.score(hand.player,hand.comp)
-        print(score.pScore, score.cScore) #debug for score() class
+    
     for event in pygame.event.get():
 
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
         if event.type == MOUSEBUTTONUP: #run next turn
-            if len(deck.cards) > 0:
+            if len(deck.cards) > 0 and warchecker == False:
                 hand.draw('comp')
                 hand.draw('player')
                 counter += 1
                 counter2 = 0
             else:
                 end()
+    if warchecker == False:
+        display()
+    
+    if counter == counter2:
+        score.score(hand.player,hand.comp,1)
+        warchecker = False
+        print(score.pScore, score.cScore) #debug for score() class
+        print(len(deck.cards))
     pygame.display.update()
     counter2 += 1
