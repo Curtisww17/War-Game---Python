@@ -19,7 +19,6 @@
 #                           `=--=-'
 #                  Buddah Bless The Code
 import pygame, sys, random, time, math
-import pygame, sys, random, time
 from pygame.locals import *
 #Note card image files are labeled by value from 1 to 13 and first letter of suit (jack of clubs is 11c)
 
