@@ -18,21 +18,14 @@
  #  ===========`-.`___`-.__\ \___  /__.-'_.'_.-'================
 #                           `=--=-'
 #                  Buddah Bless The Code
-<<<<<<< HEAD
 import pygame, sys, random, time, math
-=======
 import pygame, sys, random, time
->>>>>>> a846eef81540bb2660ee8a2f58b69c99a9571aa8
 from pygame.locals import *
 #Note card image files are labeled by value from 1 to 13 and first letter of suit (jack of clubs is 11c)
 
 
 def init():
-<<<<<<< HEAD
     global textBox, textRect, hand, deck, window, font, back, score, counter, counter2, warchecker
-=======
-    global textBox, textRect, hand, deck, window, font, back, score, counter, counter2, activew
->>>>>>> a846eef81540bb2660ee8a2f58b69c99a9571aa8
     pygame.init()
     window = pygame.display.set_mode((800,600))
     pygame.display.set_caption('War!')
@@ -49,15 +42,11 @@ def init():
     score = score()
     counter = 0
     counter2 = 0
-<<<<<<< HEAD
     warchecker = False
-=======
-    activew = False
->>>>>>> a846eef81540bb2660ee8a2f58b69c99a9571aa8
+
 
 
 def display():
-    if activew == False: #Keeps from screwing up the War! setup
         window.fill((0,160,0))
         window.blit(textBox,textRect)
         if hand.player != None and hand.comp != None:
@@ -137,7 +126,6 @@ def end():
     pass
 
 def war():
-<<<<<<< HEAD
     warchecker = True
     if len(deck.cards) >= 8:
         upper = 7
@@ -163,35 +151,7 @@ def war():
     time.sleep(1)
     
     
-=======
-    activew = True
-    back = pygame.image.load("{}".format("back.png"))
-    back = pygame.transform.scale(back, (148,200))#Sets back to the image of a card back
 
-    if len(deck.cards) >= 8: #makes sure there are enough cards for War!
-        window.blit(back, (126,250))#Displays the card backs
-        window.blit(back, (526,250))
-        window.blit(back, (126,300))#Row 2
-        window.blit(back, (526,300))
-        window.blit(back, (126,350))#Row 3
-        window.blit(back, (526,350))
-
-        c = 0 #used as counter var for while loop
-        while c < 6: #removes the 6 discarded cards from the deck
-            deck.cards.pop()#Removes last card in list
-            c += 1
-
-        hand.draw('comp') #draws the 2 cards for WAR!
-        hand.draw('player')
-
-        window.blit(hand.player.img(), (126,400)) #displays the 2 final cards for WAR!
-        window.blit(hand.comp.img(), (526,400))
-
-        score.score(hand.player,hand.comp)#Scores WAR!
-
-        pygame.display.update()
-        time.sleep(2) #DEBUG REMOVE FROM FINAL BUILD
->>>>>>> a846eef81540bb2660ee8a2f58b69c99a9571aa8
 
 
 init()#starts EVERYTHING
@@ -203,13 +163,8 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == MOUSEBUTTONUP: #run next turn
-<<<<<<< HEAD
-            if len(deck.cards) > 0 and warchecker == False:
-=======
-            if activew == True:
-                activew = False
-            if len(deck.cards) > 1:
->>>>>>> a846eef81540bb2660ee8a2f58b69c99a9571aa8
+
+            if len(deck.cards) > 0:
                 hand.draw('comp')
                 hand.draw('player')
                 counter += 1
