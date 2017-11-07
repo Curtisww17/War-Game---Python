@@ -24,18 +24,21 @@ from pygame.locals import *
 
 
 def init():
-    global textBox, textRect, hand, deck, window, font, back, score, counter, counter2, warchecker
+    global textBox, textRect, hand, deck, window, font, back, score, counter, counter2, warchecker, white, font2
     pygame.init()
+    white = (255,255,255)
     window = pygame.display.set_mode((800,600))
     pygame.display.set_caption('War!')
     font = pygame.font.SysFont('broadway', 38, True)
+    font2 = pygame.font.SysFont('broadway',28)
     back = pygame.image.load("back.png")
     back = pygame.transform.scale(back, (148,200))
     hand = Hand()
     deck = Deck()
     random.shuffle(deck.cards)
     window.fill((0,160,0))
-    textBox = font.render('WAR!',True, (255,255,255))
+    textBox = font.render('WAR!',True, white)
+    
     textRect = textBox.get_rect()
     textRect.center = (400,100)
     score = score()
@@ -48,6 +51,8 @@ def init():
 def display():
         window.fill((0,160,0))
         window.blit(textBox,textRect)
+        window.blit(compScore,compRect)
+        window.blit(playerScore,playerRect)
         if hand.player != None and hand.comp != None:
             window.blit(hand.player.img(), (126,200))
             window.blit(hand.comp.img(), (526,200))
@@ -133,7 +138,7 @@ def war():
         
     for i in range(1, math.ceil(upper/2)):
         deck.cards.pop(-i)
-        deck.cards.pop(-(i+1))
+        deck.cards.pop(-i)
         
         window.blit(back, (126, 250 + (50* i)))
         window.blit(back, (526, 250 + (50* i)))
@@ -154,7 +159,17 @@ def war():
 
 
 init()#starts EVERYTHING
+
+
+
+
 while True:
+    compScore = font2.render('Your Score: ' + str(score.pScore), True, white)
+    compRect = compScore.get_rect()
+    compRect.center = (200,150)
+    playerScore = font2.render('My Score: ' + str(score.cScore), True, white)
+    playerRect = compScore.get_rect()
+    playerRect.center = (600,150)
     
     for event in pygame.event.get():
 
@@ -176,7 +191,7 @@ while True:
     if counter == counter2:
         score.score(hand.player,hand.comp,1)
         warchecker = False
-        print(score.pScore, score.cScore) #debug for score() class
+        #print(score.pScore, score.cScore) #debug for score() class
         print(len(deck.cards))
     pygame.display.update()
     counter2 += 1
