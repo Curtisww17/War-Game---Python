@@ -16,8 +16,7 @@
    #          | | :  `- \`. ;`. _/; .'/ /  .' ; |
   #           \  \ `-.   \_\_`. _.'_/_/  -' _.' /
  #  ===========`-.`___`-.__\ \___  /__.-'_.'_.-'================
-#                           `=--=-'
-#                  Buddah Bless The Code
+#                           '=--=-'
 import pygame, sys, random, time, math
 from pygame.locals import *
 #Note card image files are labeled by value from 1 to 13 and first letter of suit (jack of clubs is 11c)
@@ -147,8 +146,8 @@ def war():
 
     hand.draw('comp')
     hand.draw('player')
-    window.blit(hand.player.img(), (126,300 + (50* i)))
-    window.blit(hand.comp.img(), (526,300 + (50 * i)))
+    window.blit(hand.player.img(), (126,(300 + (50* i))))
+    window.blit(hand.comp.img(), (526,(300 + (50 * i))))
     time.sleep(.5)
     pygame.display.update()
     score.score(hand.player,hand.comp,6)
