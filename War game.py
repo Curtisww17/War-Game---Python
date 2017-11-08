@@ -37,7 +37,7 @@ def init():
     random.shuffle(deck.cards)
     window.fill((0,160,0))
     textBox = font.render('WAR!',True, white)
-    
+
     textRect = textBox.get_rect()
     textRect.center = (400,100)
     score = score()
@@ -120,25 +120,34 @@ class score(object): #Used to score the hand and store curent scores
                 self.pScore += inc
             elif hand.comp.value == 1 and hand.player.value != 1:
                 self.cScore += inc
-            elif hand.comp.value == hand.player.value:
+            elif hand.comp.value == hand.player.value: #runs war() when cards are the same
                 if len(deck.cards) > 0:
                     war()
 
+def wait():
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == MOUSEBUTTONUP:
+                waiting = False
 
 def end():
     pass
 
 def war():
-    warchecker = True
+    #warchecker = True
     if len(deck.cards) >= 8:
         upper = 7
     else:
         upper = len(deck.cards)-1
-        
+
     for i in range(1, math.ceil(upper/2)):
         deck.cards.pop(-i)
         deck.cards.pop(-i)
-        
+
         window.blit(back, (126, 250 + (50* i)))
         window.blit(back, (526, 250 + (50* i)))
         time.sleep(.5)
@@ -152,8 +161,8 @@ def war():
     pygame.display.update()
     score.score(hand.player,hand.comp,6)
     time.sleep(1)
-    
-    
+    wait()
+
 
 
 
@@ -169,7 +178,7 @@ while True:
     playerScore = font2.render('My Score: ' + str(score.cScore), True, white)
     playerRect = compScore.get_rect()
     playerRect.center = (600,150)
-    
+
     for event in pygame.event.get():
 
         if event.type == QUIT:
@@ -177,6 +186,7 @@ while True:
             sys.exit()
         if event.type == MOUSEBUTTONUP: #run next turn
 
+            #print(warchecker)
             if len(deck.cards) > 0:
                 hand.draw('comp')
                 hand.draw('player')
@@ -184,13 +194,14 @@ while True:
                 counter2 = 0
             else:
                 end()
-    if warchecker == False:
-        display()
-    
+            #if warchecker:
+            #    warchecker = False
+
     if counter == counter2:
         score.score(hand.player,hand.comp,1)
-        warchecker = False
         #print(score.pScore, score.cScore) #debug for score() class
         print(len(deck.cards))
+    #if warchecker == False:
+    display()
     pygame.display.update()
     counter2 += 1
