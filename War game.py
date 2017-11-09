@@ -40,7 +40,7 @@ def init():
 
     textRect = textBox.get_rect()
     textRect.center = (400,100)
-    score = score()
+    score = Score()
     counter = 0
     counter2 = 0
     warchecker = False
@@ -104,7 +104,7 @@ class Hand(object):
             self.comp = deck.cards[-1] #adds last card in list cards to list comp
             deck.cards.pop()
 
-class score(object): #Used to score the hand and store curent scores
+class Score(object): #Used to score the hand and store curent scores
     def __init__(self):
         self.pScore = 0
         self.cScore = 0
@@ -138,7 +138,14 @@ def end():
     font3 = pygame.font.SysFont('broadway', 20, True)
     pygame.draw.rect(window, (255,255,255), (200, 200, 400, 200))
 
-    winner = 'Test text' #replace
+    winner = 'ERROR 404 Winner Not Found'
+    if score.pScore < score.cScore:
+        winner = 'You Win!'
+    elif score.pScore > score.cScore:
+        winner = 'You Lose'
+    else:
+        winner = 'Tie Game!'
+
     theEnd = font.render(winner, True,(0,0,0))
     endRect = theEnd.get_rect()
     endRect.center = (400, 250)
@@ -153,9 +160,11 @@ def end():
 
     wait()
 
+
     init()
 
 def war():
+    global i
     #warchecker = True
     if len(deck.cards) >= 8:
         upper = 7
@@ -168,17 +177,16 @@ def war():
 
         window.blit(back, (126, 250 + (50* i)))
         window.blit(back, (526, 250 + (50* i)))
-        time.sleep(.5)
+        time.sleep(.25)
         pygame.display.update()
 
     hand.draw('comp')
     hand.draw('player')
     window.blit(hand.player.img(), (126,(300 + (50* i))))
     window.blit(hand.comp.img(), (526,(300 + (50 * i))))
-    time.sleep(.5)
+    time.sleep(.25)
     pygame.display.update()
     score.score(hand.player,hand.comp,6)
-    time.sleep(1)
     wait()
 
 
@@ -216,8 +224,8 @@ while True:
             #    warchecker = False
 
     if counter == counter2:
-        score.score(hand.player,hand.comp,1)
-        #print(score.pScore, score.cScore) #debug for score() class
+        score.score(hand.player, hand.comp, 1)
+        #print(Score.pScore, Score.cScore) #debug for Score() class
         print(len(deck.cards))
     #if warchecker == False:
     display()
