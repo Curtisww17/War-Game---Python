@@ -136,7 +136,25 @@ def wait():
                 waiting = False
 
 def end():
-    pass
+    font3 = pygame.font.SysFont('broadway', 20, True)
+    pygame.draw.rect(window, (255,255,255), (200, 200, 400, 200))
+
+    winner = 'Test text' #replace
+    theEnd = font.render(winner, True,(0,0,0))
+    endRect = theEnd.get_rect()
+    endRect.center = (400, 250)
+
+    inst = font3.render('Click anywhere to restart.', True, (0,0,0))
+    instRect = inst.get_rect()
+    instRect.center = (400, 320)
+
+    window.blit(theEnd, endRect)
+    window.blit(inst, instRect)
+    pygame.display.update()
+
+    wait()
+
+    init()
 
 def war():
     #warchecker = True
