@@ -145,8 +145,8 @@ def war():
         upper = len(deck.cards)-1
 
     for i in range(1, math.ceil(upper/2)):
-        deck.cards.pop(-i)
-        deck.cards.pop(-i)
+        deck.cards.pop(-i) # This deletes the last two cards in the deck, i times,
+        deck.cards.pop(-i) #which accounts for if a war is called when there arent enough cards for a full war
 
         window.blit(back, (126, 250 + (50* i)))
         window.blit(back, (526, 250 + (50* i)))
@@ -172,7 +172,7 @@ init()#starts EVERYTHING
 
 
 while True:
-    compScore = font2.render('Your Score: ' + str(score.pScore), True, white)
+    compScore = font2.render('Your Score: ' + str(score.pScore), True, white) #renders the current score and displays it
     compRect = compScore.get_rect()
     compRect.center = (200,150)
     playerScore = font2.render('My Score: ' + str(score.cScore), True, white)
@@ -186,7 +186,6 @@ while True:
             sys.exit()
         if event.type == MOUSEBUTTONUP: #run next turn
 
-            #print(warchecker)
             if len(deck.cards) > 0:
                 hand.draw('comp')
                 hand.draw('player')
@@ -194,14 +193,12 @@ while True:
                 counter2 = 0
             else:
                 end()
-            #if warchecker:
-            #    warchecker = False
+            
 
     if counter == counter2:
         score.score(hand.player,hand.comp,1)
         #print(score.pScore, score.cScore) #debug for score() class
         print(len(deck.cards))
-    #if warchecker == False:
     display()
     pygame.display.update()
     counter2 += 1
